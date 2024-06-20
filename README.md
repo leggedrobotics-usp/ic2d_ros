@@ -47,7 +47,6 @@ This repo is a standard ROS2 package (ament_cmake).
 
 - A ROS2 workspace (colcon)
     - See [this tutorial](https://docs.ros.org/en/rolling/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.html) to learn how to create your own workspace.
-    ```
 
 ### 💻 Installing
 
