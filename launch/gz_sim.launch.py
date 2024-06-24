@@ -32,10 +32,6 @@ def generate_launch_description():
     else:
         model_path = pkg_install_path
 
-    print(model_path)
-        
-    gazebo_params_file = os.path.join(get_package_share_directory(package_name), 'config', 'gazebo_params.yaml')
-
     # Include the Gazebo launch file, provided by the gazebo_ros package
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
@@ -44,6 +40,7 @@ def generate_launch_description():
              )
 
     # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
+
     spawn_entity = Node(package='ros_gz_sim', executable='create',
                         arguments=['-topic', 'robot_description',
                                    '-name', 'ic2d',
@@ -64,8 +61,16 @@ def generate_launch_description():
         arguments=["joint_broadcaster"]
     )
 
-    # Foxglobe bridge (for visualization purposes)
-    foxglove_bridge = Node(package='foxglove_bridge', executable='foxglove_bridge')
+    ros_gz_bridge_config = os.path.join(get_package_share_directory(package_name), "config", "ros_gz_bridge.yaml")
+
+    # ROS GZ bridge (exposes topics for applying joint forces, used to simulate spring/damper)
+    ros_gz_bridge = Node(package="ros_gz_bridge",
+                         executable="parameter_bridge",
+                         ros_arguments=["-p", "config_file:=" + ros_gz_bridge_config])
+
+    # Foxglove bridge (for visualization purposes)
+    foxglove_bridge = Node(package='foxglove_bridge',
+                           executable='foxglove_bridge')
 
     # Reference signal generator
     ref_signal_generator = Node(
@@ -83,5 +88,6 @@ def generate_launch_description():
         pos_cont_spawner,
         joint_broad_spawner,
         ref_signal_generator,
+        ros_gz_bridge,
         foxglove_bridge
     ])

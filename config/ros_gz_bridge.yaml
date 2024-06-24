@@ -1,0 +1,7 @@
+- topic_name: "/model/ic2d/joint/joint_1/cmd_force"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+
+- topic_name: "/model/ic2d/joint/joint_2/cmd_force"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
