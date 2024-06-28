@@ -5,8 +5,6 @@ controller_manager:
 
     position_controller:
       type: position_controllers/JointGroupPositionController
-    custom_pid_controller:
-      type: custom_pid_controller/CustomPIDController
     joint_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
@@ -21,10 +19,3 @@ position_controller:
       - position
       - velocity
       - effort
-
-custom_pid_controller:
-  ros__parameters:
-    joints:
-      - joint_1
-      - joint_2
-    interface_name: position
