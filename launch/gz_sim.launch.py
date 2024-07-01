@@ -77,8 +77,11 @@ def generate_launch_description():
     ref_signal_generator = Node(
         package="reference_signal_generator",
         executable="reference_signal_generator",
-        ros_arguments=["-p", "topic_name:=/position_controller/commands"]
-    )
+        ros_arguments=["-p", "topic_name:=/position_controller/commands"])
+
+    virtual_spring_damper = Node(package="ic2d_description",
+                                 executable="virtual_spring_damper",
+                                 ros_arguments=["-p", "undeformed_length:=0.3", "-p", "stiffness:=6000.0", "-p", "damping:=10.0"])
 
     # Launch them all!
     return LaunchDescription([
@@ -90,5 +93,6 @@ def generate_launch_description():
         joint_broad_spawner,
         ref_signal_generator,
         ros_gz_bridge,
-        foxglove_bridge
+        foxglove_bridge,
+        virtual_spring_damper
     ])
