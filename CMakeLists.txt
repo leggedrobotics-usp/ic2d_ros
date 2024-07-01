@@ -20,6 +20,12 @@ find_package(ament_cmake REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
+find_package(ros_gz_interfaces REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -32,9 +38,17 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+add_executable(virtual_spring_damper src/virtual_spring_damper.cpp)
+ament_target_dependencies(virtual_spring_damper rclcpp tf2 tf2_ros geometry_msgs visualization_msgs ros_gz_interfaces)
+
 install(
   DIRECTORY config description launch meshes world
   DESTINATION share/${PROJECT_NAME}
+)
+
+install(TARGETS
+  virtual_spring_damper
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_package()
