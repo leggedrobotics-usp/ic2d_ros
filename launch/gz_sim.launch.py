@@ -4,16 +4,16 @@ from ament_index_python.packages import get_package_share_directory
 from ament_index_python.packages import get_package_prefix
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
-from launch.actions import SetEnvironmentVariable
+from launch.substitutions import LaunchConfiguration
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch_ros.actions import Node
 
 def generate_launch_description():
-
-    # Include the robot_state_publisher launch file, provided by our own package. Force sim time to be enabled
-    # !!! MAKE SURE YOU SET THE PACKAGE NAME CORRECTLY !!!
+    
+    joint_1_config = LaunchConfiguration('joint_1_config')
+    joint_2_config = LaunchConfiguration('joint_2_config')
 
     package_name='ic2d_description'
 
@@ -21,7 +21,7 @@ def generate_launch_description():
     rsp = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
                     get_package_share_directory(package_name),'launch','rsp.launch.py'
-                )]), launch_arguments={'use_sim_time': 'true'}.items()
+                )]), launch_arguments={'use_sim_time': 'true', 'joint_1_config': joint_1_config, 'joint_2_config': joint_2_config}.items()
     )
 
     # Set the GAZEBO_MODEL_PATH environment variable to include the models from our own package.
@@ -86,6 +86,16 @@ def generate_launch_description():
     # Launch them all!
     return LaunchDescription([
         SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH', model_path),
+        DeclareLaunchArgument(
+            'joint_1_config',
+            default_value='linmot',
+            description='Joint 1 configuration. Possible values: "linmot", "hydraulic", "fixed"'
+        ),
+        DeclareLaunchArgument(
+            'joint_2_config',
+            default_value='linmot',
+            description='Joint 2 configuration. Possible values: "linmot", "hydraulic", "fixed"'
+        ),
         rsp,
         gazebo,
         spawn_entity,

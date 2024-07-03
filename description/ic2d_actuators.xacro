@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- LinMot -->
+    <xacro:property name="linmot_stroke" value="0.12"/>
+    <xacro:property name="linmot_effort" value="255"/>
+    <xacro:property name="linmot_velocity" value="3.8"/>
+
+    <!-- Hoerbiger hydraulic cylinder -->
+    <xacro:property name="hydraulic_stroke" value="0.08"/>
+    <xacro:property name="hydraulic_effort" value="3216"/>
+    <xacro:property name="hydraulic_velocity" value="4"/>
+    
+</robot>

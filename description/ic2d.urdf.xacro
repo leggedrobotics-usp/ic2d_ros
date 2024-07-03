@@ -1,5 +1,15 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ic2d">
+
+    <!-- Joint configurations:
+         "linmot": LinMot P01-37x120F/40x120-HP
+         "hydraulic": Hoerbiger LB6161000804M
+         "fixed": no motion -->
+    <xacro:arg name="joint_1_config" default="linmot"/>
+    <xacro:arg name="joint_2_config" default="linmot"/>
+    <xacro:property name="joint_1_config" value="$(arg joint_1_config)"/>
+    <xacro:property name="joint_2_config" value="$(arg joint_2_config)"/>
+
     <xacro:include filename="ic2d_core.xacro"/>
     <xacro:include filename="ros2_control.xacro"/>
 </robot>
