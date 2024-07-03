@@ -32,18 +32,16 @@ def generate_launch_description():
     else:
         model_path = pkg_install_path
 
-    print(model_path)
-        
-    gazebo_params_file = os.path.join(get_package_share_directory(package_name), 'config', 'gazebo_params.yaml')
+    gz_world_path = os.path.join(get_package_share_directory(package_name), "world", "ic2d_empty.sdf")
 
     # Include the Gazebo launch file, provided by the gazebo_ros package
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
                     get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')]),
-                    launch_arguments=[('gz_args', [' -r -v 3 empty.sdf'])]
-             )
+                    launch_arguments=[('gz_args', [' -r -v 3 ' + gz_world_path])])
 
     # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
+
     spawn_entity = Node(package='ros_gz_sim', executable='create',
                         arguments=['-topic', 'robot_description',
                                    '-name', 'ic2d',
@@ -64,15 +62,26 @@ def generate_launch_description():
         arguments=["joint_broadcaster"]
     )
 
-    # Foxglobe bridge (for visualization purposes)
-    foxglove_bridge = Node(package='foxglove_bridge', executable='foxglove_bridge')
+    ros_gz_bridge_config = os.path.join(get_package_share_directory(package_name), "config", "ros_gz_bridge.yaml")
+
+    # ROS GZ bridge (exposes topics for applying joint forces, used to simulate spring/damper)
+    ros_gz_bridge = Node(package="ros_gz_bridge",
+                         executable="parameter_bridge",
+                         ros_arguments=["-p", "config_file:=" + ros_gz_bridge_config])
+
+    # Foxglove bridge (for visualization purposes)
+    foxglove_bridge = Node(package='foxglove_bridge',
+                           executable='foxglove_bridge')
 
     # Reference signal generator
     ref_signal_generator = Node(
         package="reference_signal_generator",
         executable="reference_signal_generator",
-        ros_arguments=["-p", "topic_name:=/position_controller/commands"]
-    )
+        ros_arguments=["-p", "topic_name:=/position_controller/commands"])
+
+    virtual_spring_damper = Node(package="ic2d_description",
+                                 executable="virtual_spring_damper",
+                                 ros_arguments=["-p", "undeformed_length:=0.3", "-p", "stiffness:=6000.0", "-p", "damping:=10.0"])
 
     # Launch them all!
     return LaunchDescription([
@@ -83,5 +92,7 @@ def generate_launch_description():
         pos_cont_spawner,
         joint_broad_spawner,
         ref_signal_generator,
-        foxglove_bridge
+        ros_gz_bridge,
+        foxglove_bridge,
+        virtual_spring_damper
     ])

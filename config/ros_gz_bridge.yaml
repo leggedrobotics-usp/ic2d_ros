@@ -1,0 +1,3 @@
+- topic_name: "/world/ic2d_empty/wrench"
+  ros_type_name: "ros_gz_interfaces/msg/EntityWrench"
+  gz_type_name: "gz.msgs.EntityWrench"
