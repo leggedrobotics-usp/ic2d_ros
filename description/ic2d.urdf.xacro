@@ -7,8 +7,14 @@
          "fixed": no motion -->
     <xacro:arg name="joint_1_config" default="linmot"/>
     <xacro:arg name="joint_2_config" default="linmot"/>
+    <xacro:arg name="link_1_mass" default="18.505"/>
+    <xacro:arg name="link_2_mass" default="7.3822"/>
+
+    <!-- Convert args to properties for easier syntax -->
     <xacro:property name="joint_1_config" value="$(arg joint_1_config)"/>
     <xacro:property name="joint_2_config" value="$(arg joint_2_config)"/>
+    <xacro:property name="link_1_mass" value="$(arg link_1_mass)"/>
+    <xacro:property name="link_2_mass" value="$(arg link_2_mass)"/>
 
     <xacro:include filename="ic2d_core.xacro"/>
     <xacro:include filename="ros2_control.xacro"/>

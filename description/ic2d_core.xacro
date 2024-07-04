@@ -3,6 +3,7 @@
 
     <xacro:include filename="ic2d_materials.xacro"/>
     <xacro:include filename="ic2d_actuators.xacro"/>
+    <xacro:include filename="inertial_macros.xacro"/>
 
     <link name="world"/>
 
@@ -34,11 +35,16 @@
   </joint>
 
   <link name="link_1">
+    <!-- CAD-generated inertial block
     <inertial>
       <origin xyz="-0.20394 5.3438E-06 -0.015363" rpy="0 0 0" />
       <mass value="18.505" />
       <inertia ixx="0.12026" ixy="9.5669E-07" ixz="-3.1152E-06" iyy="0.014885" iyz="-6.6837E-08" izz="0.12951" />
-    </inertial>
+    </inertial> -->
+    <xacro:inertial_box mass="${link_1_mass}" x="0.378020" y="0.315000" z="0.159020">
+      <!-- Macro inertial block. XYZ dimensions correspond to link_1.STL bounding box -->
+      <origin xyz="-0.20394 5.3438E-06 -0.015363" rpy="0 0 0" />
+    </xacro:inertial_box>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
@@ -83,11 +89,16 @@
   </xacro:if>
   
   <link name="link_2">
+    <!-- CAD-generated inertial block
     <inertial>
       <origin xyz="0.063069 -1.9306E-06 -0.02353" rpy="0 0 0" />
       <mass value="7.3822" />
       <inertia ixx="0.044429" ixy="2.1429E-07" ixz="4.9245E-07" iyy="0.0054955" iyz="6.0516E-08" izz="0.047349" />
-    </inertial>
+    </inertial> -->
+    <xacro:inertial_box mass="${link_2_mass}" x="0.119020" y="0.315000" z="0.099020">
+      <!-- Macro inertial block. XYZ dimensions correspond to link_2.STL bounding box -->
+      <origin xyz="0.063069 -1.9306E-06 -0.02353" rpy="0 0 0" />
+    </xacro:inertial_box>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
