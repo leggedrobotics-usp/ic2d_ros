@@ -35,9 +35,6 @@ def generate_launch_description():
         parameters=[params]
     )
 
-    # Foxglobe bridge (for visualization purposes)
-    foxglove_bridge = Node(package='foxglove_bridge', executable='foxglove_bridge')
-
     # Launch!
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -65,5 +62,4 @@ def generate_launch_description():
             description='Link 2 total mass'
         ),
         robot_state_publisher,
-        foxglove_bridge
     ])
