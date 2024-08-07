@@ -18,7 +18,7 @@ def generate_launch_description():
 
     package_name='ic2d_description'
 
-    # Robot state publisher
+    # Include the robot_state_publisher launch file, provided by our own package. Force sim time to be enabled.
     rsp = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(get_package_share_directory(package_name),'launch','rsp.launch.py')]),
         launch_arguments={'use_sim_time': 'true'}.items())
@@ -40,7 +40,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')]),
         launch_arguments=[('gz_args', ['-s -r -v 1 ' + gz_world_path])])
 
-    # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
+    # Run the spawner node from the gazebo_ros package.
     spawn_entity = Node(package='ros_gz_sim', executable='create',
                         arguments=['-topic', 'robot_description',
                                    '-name', 'ic2d',
@@ -51,15 +51,13 @@ def generate_launch_description():
     pos_cont_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["position_controller"]
-    )
+        arguments=["position_controller"])
 
     # Joint broadcaster
     joint_broad_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_broadcaster"]
-    )
+        arguments=["joint_broadcaster"])
 
     ros_gz_bridge_config = os.path.join(get_package_share_directory(package_name), "config", "ros_gz_bridge.yaml")
 
