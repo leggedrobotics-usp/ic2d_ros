@@ -32,13 +32,73 @@
 
 ## 🧐 About <a name = "about"></a>
 
-This package contains the ROS2 description (URDF/xacro files) of IC2D (Impedance Control in 2 Dimensions). The files were generated using a simplified version of the CAD model available on this [other repo](https://github.com/leggedrobotics-usp/ic2d) and the [solidworks_urdf_exporter](https://github.com/ros/solidworks_urdf_exporter).
+This package contains the ROS2 description (URDF/xacro files) of IC2D (Impedance Control in 2 Dimensions). The files were generated using a simplified version of the CAD model available on this [other repo](https://github.com/leggedrobotics-usp/ic2d) and the [solidworks_urdf_exporter](https://github.com/ros/solidworks_urdf_exporter). For simulation purposes, the package includes the ```virtual_spring_damper``` node, that simulates a spring-damper connection between the two moving platforms, with customizable undeformed length, stiffness and damping.
 
 The package also has 2 launch files:
 
 - **rsp.launch.py**: robot state publisher. Simply loads the URDF onto the ``/robot_description`` topic. Can be visualized in Rviz2 or Foxglove.
 
+```bash
+Arguments (pass arguments as '<name>:=<value>'):
+
+    'use_sim_time':
+        Use sim time if true
+        (default: 'true')
+
+    'joint_1_config':
+        Joint 1 configuration. Possible values: "linmot", "hydraulic", "fixed"
+        (default: 'linmot')
+
+    'joint_2_config':
+        Joint 2 configuration. Possible values: "linmot", "hydraulic", "fixed"
+        (default: 'linmot')
+
+    'link_1_mass':
+        Link 1 total mass
+        (default: '18.505')
+
+    'link_2_mass':
+        Link 2 total mass
+        (default: '7.3822')
+```
+
 - **gz_sim.launch.py**: launches the robot in a simulated environment (Ignition Gazebo). Currently loads a simple joint position controller (from [ros2_controllers](https://github.com/ros-controls/ros2_controllers)) for preliminary testing purposes.
+
+```bash
+Arguments (pass arguments as '<name>:=<value>'):
+
+    'undeformed_length':
+        Undeformed length of the spring
+        (default: '0.3')
+
+    'stiffness':
+        Stiffness of the spring
+        (default: '6000.0')
+
+    'damping':
+        Damping coefficient of the damper
+        (default: '100.0')
+
+    'use_sim_time':
+        Use sim time if true
+        (default: 'true')
+
+    'joint_1_config':
+        Joint 1 configuration. Possible values: "linmot", "hydraulic", "fixed"
+        (default: 'linmot')
+
+    'joint_2_config':
+        Joint 2 configuration. Possible values: "linmot", "hydraulic", "fixed"
+        (default: 'linmot')
+
+    'link_1_mass':
+        Link 1 total mass
+        (default: '18.505')
+
+    'link_2_mass':
+        Link 2 total mass
+        (default: '7.3822')
+```
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 This repo is a standard ROS2 package (ament_cmake).
@@ -66,7 +126,13 @@ colcon build --symlink-install
 
 ## 🎈 Usage <a name="usage"></a>
 
-Use the provided launch files to test basic robot visualization and Gazebo simulation. Use the launch and URDF files layout as a starting point to load different controllers and use cases.
+Use the provided launch files to test basic robot visualization and Gazebo simulation. Parameters are listed above (generated running ```ros2 launch ic2d_description <launch_file>.launch.py --show-args```). Use the launch and URDF files layout as a starting point to load different controllers and use cases.
+
+The ```virtual_spring_damper``` node is executed with command line arguments as follows:
+
+```bash
+ros2 run ic2d_description virtual_spring_damper undeformed_length=<value> stiffness:=<value> damping:=<value>
+```
 
 ## 🔋 Feature requests <a name="feature_requests"></a>
 

@@ -7,7 +7,15 @@
         <joint name="joint_1">
             <command_interface name="position">
                 <param name="min">0</param>
-                <param name="max">0.5</param>
+                <xacro:if value="${joint_1_config == 'linmot'}">
+                    <param name="max">${linmot_stroke}</param>
+                </xacro:if>
+                <xacro:if value="${joint_1_config == 'hydraulic'}">
+                    <param name="max">${hydraulic_stroke}</param>
+                </xacro:if>
+                <xacro:if value="${joint_1_config == 'fixed'}">
+                    <param name="max">0</param>
+                </xacro:if>
             </command_interface>
             <state_interface name="position"/>
             <state_interface name="velocity"/>
@@ -15,13 +23,21 @@
         </joint>
         <joint name="joint_2">
             <command_interface name="position">
-                <param name="min">-0.5</param>
+                <xacro:if value="${joint_2_config == 'linmot'}">
+                    <param name="min">-${linmot_stroke}</param>
+                </xacro:if>
+                <xacro:if value="${joint_2_config == 'hydraulic'}">
+                    <param name="min">-${hydraulic_stroke}</param>
+                </xacro:if>
+                <xacro:if value="${joint_2_config == 'fixed'}">
+                    <param name="min">0</param>
+                </xacro:if>
                 <param name="max">0</param>
             </command_interface>
             <state_interface name="position"/>
             <state_interface name="velocity"/>
             <state_interface name="effort"/>
-        </joint>
+        </joint>  
     </ros2_control>
     <gazebo>
         <plugin filename="libgz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">

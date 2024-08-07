@@ -1,7 +1,12 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
     <xacro:include filename="ic2d_materials.xacro"/>
+    <xacro:include filename="ic2d_actuators.xacro"/>
+    <xacro:include filename="inertial_macros.xacro"/>
+
     <link name="world"/>
+
     <link name="base_link">
     <inertial>
       <origin xyz="-1.0865E-07 -0.00019703 0.040628" rpy="0 0 0" />
@@ -22,17 +27,24 @@
       </geometry>
     </collision>
   </link>
+
   <joint name="fixed" type="fixed">
     <parent link="world"/>
     <child link="base_link"/>
     <origin xyz="0 0 0"/>
   </joint>
+
   <link name="link_1">
+    <!-- CAD-generated inertial block
     <inertial>
       <origin xyz="-0.20394 5.3438E-06 -0.015363" rpy="0 0 0" />
       <mass value="18.505" />
       <inertia ixx="0.12026" ixy="9.5669E-07" ixz="-3.1152E-06" iyy="0.014885" iyz="-6.6837E-08" izz="0.12951" />
-    </inertial>
+    </inertial> -->
+    <xacro:inertial_box mass="${link_1_mass}" x="0.378020" y="0.315000" z="0.159020">
+      <!-- Macro inertial block. XYZ dimensions correspond to link_1.STL bounding box -->
+      <origin xyz="-0.20394 5.3438E-06 -0.015363" rpy="0 0 0" />
+    </xacro:inertial_box>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
@@ -47,19 +59,46 @@
       </geometry>
     </collision>
   </link>
-  <joint name="joint_1" type="prismatic">
-    <origin xyz="-0.088092 0 0.18042" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="link_1" />
-    <axis xyz="1 0 0" />
-    <limit lower="0" upper="0.5" effort="1000" velocity="100" />
-  </joint>
+
+  <xacro:if value="${joint_1_config == 'linmot'}">
+    <joint name="joint_1" type="prismatic">
+      <origin xyz="-0.088092 0 0.18042" rpy="0 0 0" />
+      <parent link="base_link" />
+      <child link="link_1" />
+      <axis xyz="1 0 0" />
+      <limit lower="0" upper="${linmot_stroke}" effort="${linmot_effort}" velocity="${linmot_velocity}" />
+    </joint>
+  </xacro:if>
+  <xacro:if value="${joint_1_config == 'hydraulic'}">
+    <joint name="joint_1" type="prismatic">
+      <origin xyz="-0.088092 0 0.18042" rpy="0 0 0" />
+      <parent link="base_link" />
+      <child link="link_1" />
+      <axis xyz="1 0 0" />
+      <limit lower="0" upper="${hydraulic_stroke}" effort="${hydraulic_effort}" velocity="${hydraulic_velocity}" />
+    </joint>
+  </xacro:if>
+  <xacro:if value="${joint_1_config == 'fixed'}">
+    <joint name="joint_1" type="prismatic">
+      <origin xyz="-0.088092 0 0.18042" rpy="0 0 0" />
+      <parent link="base_link" />
+      <child link="link_1" />
+      <axis xyz="1 0 0" />
+      <limit lower="0" upper="0" effort="9999999999999" velocity="0" />
+    </joint>
+  </xacro:if>
+  
   <link name="link_2">
+    <!-- CAD-generated inertial block
     <inertial>
       <origin xyz="0.063069 -1.9306E-06 -0.02353" rpy="0 0 0" />
       <mass value="7.3822" />
       <inertia ixx="0.044429" ixy="2.1429E-07" ixz="4.9245E-07" iyy="0.0054955" iyz="6.0516E-08" izz="0.047349" />
-    </inertial>
+    </inertial> -->
+    <xacro:inertial_box mass="${link_2_mass}" x="0.119020" y="0.315000" z="0.099020">
+      <!-- Macro inertial block. XYZ dimensions correspond to link_2.STL bounding box -->
+      <origin xyz="0.063069 -1.9306E-06 -0.02353" rpy="0 0 0" />
+    </xacro:inertial_box>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
@@ -74,11 +113,33 @@
       </geometry>
     </collision>
   </link>
-  <joint name="joint_2" type="prismatic">
-    <origin xyz="0.35443 0 0.18042" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="link_2" />
-    <axis xyz="1 0 0" />
-    <limit lower="-0.5" upper="0" effort="1000" velocity="100" />
-  </joint>
+
+  <xacro:if value="${joint_2_config == 'linmot'}">
+    <joint name="joint_2" type="prismatic">
+      <origin xyz="0.35443 0 0.18042" rpy="0 0 0" />
+      <parent link="base_link" />
+      <child link="link_2" />
+      <axis xyz="1 0 0" />
+      <limit lower="-${linmot_stroke}" upper="0" effort="${linmot_effort}" velocity="${linmot_velocity}" />
+    </joint>
+  </xacro:if>
+  <xacro:if value="${joint_2_config == 'hydraulic'}">
+    <joint name="joint_2" type="prismatic">
+      <origin xyz="0.35443 0 0.18042" rpy="0 0 0" />
+      <parent link="base_link" />
+      <child link="link_2" />
+      <axis xyz="1 0 0" />
+      <limit lower="-${hydraulic_stroke}" upper="0" effort="${hydraulic_effort}" velocity="${hydraulic_velocity}" />
+    </joint>
+  </xacro:if>
+  <xacro:if value="${joint_2_config == 'fixed'}">
+    <joint name="joint_2" type="prismatic">
+      <origin xyz="0.35443 0 0.18042" rpy="0 0 0" />
+      <parent link="base_link" />
+      <child link="link_2" />
+      <axis xyz="1 0 0" />
+      <limit lower="0" upper="0" effort="9999999999999" velocity="0" />
+    </joint>
+  </xacro:if>
+
 </robot>
