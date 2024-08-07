@@ -35,12 +35,12 @@ def generate_launch_description():
 
     # Include the Gazebo launch file, provided by the gazebo_ros package
     # Verbosity level: 1 (errors only)
+    # Server only (headless) mode: "-s" argument
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')]),
-        launch_arguments=[('gz_args', [' -r -v 1 ' + gz_world_path])])
+        launch_arguments=[('gz_args', ['-s -r -v 1 ' + gz_world_path])])
 
     # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
-
     spawn_entity = Node(package='ros_gz_sim', executable='create',
                         arguments=['-topic', 'robot_description',
                                    '-name', 'ic2d',
@@ -68,21 +68,22 @@ def generate_launch_description():
                          executable="parameter_bridge",
                          ros_arguments=["-p", "config_file:=" + ros_gz_bridge_config])
 
-    # Foxglove bridge (for visualization purposes)
-    foxglove_bridge = Node(package='foxglove_bridge',
-                           executable='foxglove_bridge')
-
     # Reference signal generator
     ref_signal_generator = Node(
         package="reference_signal_generator",
         executable="reference_signal_generator",
         ros_arguments=["-p", "topic_name:=/position_controller/commands"])
 
+    # Virtual spring/damper
     virtual_spring_damper = Node(package="ic2d_description",
                                  executable="virtual_spring_damper",
                                  ros_arguments=["-p", ["undeformed_length:=", undeformed_length],
                                                 "-p", ["stiffness:=", stiffness],
                                                 "-p", ["damping:=", damping]])
+    
+    # Gazebo Real Time Factor (RTF) publisher
+    rtf_publisher = Node(package="gz_rtf_publisher",
+                         executable="gz_rtf_publisher")
 
     # Launch them all!
     return LaunchDescription([
@@ -109,6 +110,6 @@ def generate_launch_description():
         joint_broad_spawner,
         ref_signal_generator,
         ros_gz_bridge,
-        foxglove_bridge,
-        virtual_spring_damper
+        virtual_spring_damper,
+        rtf_publisher
     ])
